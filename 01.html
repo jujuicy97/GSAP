@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <!--GSAP사용시 필요-->
+    <title>GSAP 사용</title>
+    <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background-color: tomato;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- gsap.to : 현재 상태 -> 원하는 상태 (class, id로 선택)
+       gsap.from : 어떤 상태 -> 원래 상태로 돌아옴 
+       gsap.fromTo : 처음 값 마지막 값을 지정
+       -->
+    <div class="box"></div>
+    <script>
+      //현재 변경할 것을 ""안에 작성, 원하는 상태는 {}객체 안에 작성, 단위는 기본적으로 px, s
+      //첫 번째 인자 : "selector"
+      //두 번째 인자 : array or object
+      // gsap.to(".box",{
+      //         x:200,
+      //         y:500,
+      //         backgroundColor:"aqua",
+      //         duration:1
+      // });
+
+      //1초 뒤, 투명도를 0.5로 줄이기
+      // gsap.to(".box",{
+      //   opacity:0.5,
+      //   delay:1,
+      //   duration:1
+      // });
+
+      //1초 뒤에 2초 동안 투명도를 0.3으로 줄이고 300xp만큼 옮기기
+      // gsap.from(".box",{
+      //   x:300,
+      //   opacity:0.3,
+      //   duration:2,
+      //   delay:1
+      // });
+
+      //~시작, ~끝을 명확히 지정
+      // gsap.fromTo(".box",
+      //       {x:100,opacity:0.3}, //시작하는 지점
+      //       {x:800,opacity:1,duration:2}); //끝나는 지점
+
+      //gsap 속성 종류
+      //transitio 이동(x,y), rotate:rotation, scale:scale
+      // gsap.to(".box",{
+      //   x:500,
+      //   y:200,
+      //   rotation:45,
+      //   scale:1.5,
+      //   duration:2
+      // });
+
+      //repeat(반복), yoyo(되돌아오기), delay, onComplete():애니메이션이 종료되면 실행
+      // gsap.to(".box",{
+      //   x:500,
+      //   repeat:3,
+      //   yoyo:true,
+      //   delay:1,
+      //   duration:2,
+      //   onComplete: ()=>{
+      //     alert("애니메이션 끝-!");
+      //   }
+      // });
+
+      gsap.to(".box",{
+        backgroundColor:"black",
+        delay:2,
+        duration:1
+      });
+    </script>
+  </body>
+</html>

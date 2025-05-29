@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <title>배너 슬라이드</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ul,
+      li {
+        list-style: none;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+      }
+      .slider {
+        width: 500px;
+        border: 2px solid #333;
+        overflow: hidden;
+      }
+      .slider > .img-list {
+        width: 2500px;
+        display: flex;
+      }
+      .slider > .img-list > img {
+        width: 500px;
+      }
+      .btn-wrap {
+        width: 500px;
+        display: flex;
+        gap: 1rem;
+      }
+      .btn-wrap > button {
+        flex: 1;
+        padding: 1rem 0;
+      }
+      .menu-wrap {
+        width: 500px;
+        display: flex;
+      }
+      .menu-wrap > li {
+        flex: 1;
+        text-align: center;
+        padding: 1rem 0;
+        border: 1px solid #222;
+      }
+      .menu-wrap > li.active {
+        background-color: #222;
+        color: #eee;
+        font-weight: bolder;
+      }
+      .play-wrap {
+        width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+      <div class="img-list">
+        <!-- <img src="./images/img-3.png" alt="이미지3"> -->
+        <img src="./images/img-1.png" alt="이미지1" />
+        <img src="./images/img-2.png" alt="이미지2" />
+        <img src="./images/img-3.png" alt="이미지3" />
+        <!-- <img src="./images/img-1.png" alt="이미지1"> -->
+      </div>
+    </div>
+    <div class="play-wrap">
+      <button>자동실행</button>
+      <button>멈춤</button>
+    </div>
+    <ul class="menu-wrap">
+      <li data-index="1" class="active">이미지1</li>
+      <!--data-set은 사용자가 직접 속성을 추가할 수 있음-->
+      <li data-index="2">이미지2</li>
+      <li data-index="3">이미지3</li>
+    </ul>
+    <div class="btn-wrap">
+      <button class="prev">◀ 이전</button>
+      <button class="next">다음 ▶</button>
+    </div>
+    <script>
+      /* 참고용
+    //0,1,2 : 3으로 나눴을 때 나머지 값 
+    let current = 0;
+    const slideNext = ()=>{
+      //0,1,2,0,1,2.......
+      // current++;
+      // if(current >= 3){
+      //   current = 0;
+      // }
+
+      //3의 배수로 처리하기
+      current = (current+1)%4;
+      gsap.to(".img-list",{
+        x: -500 * current,
+        duration: 1,
+        onComplete:()=>{
+          //이미지의 마지막에 도착하면 원본이 이동
+          if(current === 3){
+            current = 0;
+            gsap.set(".img-list",{x:0}); //set : 원본으로 돌리기
+          }
+        }
+      });
+    }
+    // setInterval(slideNext,3000);
+    setInterval(slideNext,3000);
+    */
+
+      let intervalId = null; //전역변수로 자동실행/멈춤에 다 적용
+      let current = 1;
+      const IMG_WIDTH = 500;
+      const $imgs = document.querySelectorAll(".img-list>img");
+      // const MAX_LEN = $imgs.length - 2; //값이 3개가 나옴(원본 이미지가 3개)
+      const MAX_LEN = $imgs.length; //복제 이미지 2개를 빼고도 3개가 남은 상태
+      const $prevBtn = document.querySelector(".prev");
+      const $nextBtn = document.querySelector(".next");
+      const $imgList = document.querySelector(".img-list");
+      const $menuList = document.querySelectorAll(".menu-wrap>li");
+      const $palyList = document.querySelectorAll(".play-wrap > button");
+
+      //첫 번째 이미지를 복제해서 맨 뒤에 추가
+      const firstClone = $imgs[0].cloneNode(true); //cloneNode 복제하는 설정
+      $imgList.appendChild(firstClone);
+      //3번 이미지를 복제해서 맨 앞에 추가
+      const lastClone = $imgs[$imgs.length - 1].cloneNode(true);
+      $imgList.insertBefore(lastClone, $imgList.firstChild);
+      //전체 길이
+      // const MAX_LEN = document.querySelector(".img-list").children.length -2; //복제이미지 5개에서 2개를 빼고 3개가 남은 상태
+      // console.log(MAX_LEN);
+
+      //초기 위치 설정
+      gsap.set(".img-list", { x: -IMG_WIDTH * current });
+
+    //  console.log("슬라이드 이동 x 위치:", -IMG_WIDTH * current);
+
+      const clickNextBtn = () => {
+        current++;
+        gsap.to(".img-list", {
+          x: -IMG_WIDTH * current,
+          duration: 1,
+          onComplete: () => {
+            //마지막에 도달했을 때 시작되는 이벤트
+            if (current === MAX_LEN + 1) {
+              current = 1;
+              gsap.set(".img-list", { x: -IMG_WIDTH * current });
+            }
+            updateMenuClass();
+          }
+        });
+      };
+      //다음 버튼 클릭
+      $nextBtn.addEventListener("click", () => {
+        $palyList[1].click();
+        clickNextBtn();
+      });
+
+      //이전 버튼 클릭
+      $prevBtn.addEventListener("click", () => {
+        $palyList[1].click();
+        current--;
+        gsap.to(".img-list", {
+          x: -IMG_WIDTH * current,
+          duration: 1,
+          onComplete: () => {
+            if (current === 0) {
+              current = MAX_LEN;
+              gsap.set(".img-list", { x: -IMG_WIDTH * current });
+            }
+            updateMenuClass();
+          },
+        });
+      });
+
+      //2. ul > li에 마우스가 올라갔을 때(2) / (호버x, 색상 바뀌고 그대로 유지)
+      const updateMenuClass = () => {
+        //이전에 부여된active class 먼저 삭제
+        $menuList.forEach((elem) => {
+          elem.classList.remove("active");
+        });
+        //current 위치의 ul에 active class 부여
+        //아래에서 문자열 -> 숫자로 바꿀 때, 결과값이 1~3으로 도출돼서, 인덱스번호는 0부터라 -1 필요
+        $menuList[current - 1].classList.add("active");
+      };
+
+      //ul > li에 마우스가 올라갔을 때(1) / (호버x, 색상 바뀌고 그대로 유지)
+      $menuList.forEach((elem) => {
+        // console.log(elem);
+        //mouseenter 마우스가 올라갔을 때 이벤트 속성
+        // console.log(typeof elem.dataset.index); //1~3까지의 값을 가져올 수 있음
+        elem.addEventListener("mouseenter", () => {
+          $palyList[1].click();
+          current = Number(elem.dataset.index); //문자열 -> 숫자로 변경
+          gsap.to(".img-list", {
+            x: -IMG_WIDTH * current,
+            duration: 0.5,
+          });
+          updateMenuClass();
+        });
+      });
+
+      //자동실행 버튼을 클릭했을 때
+      $palyList[0].addEventListener("click", () => {
+        intervalId = setInterval(() => {
+          clickNextBtn();
+        }, 1000);
+        $palyList[0].disabled = true; //자동실행이 되면 버튼을 비활성화 시키는 속성
+      });
+
+      //멈춤을 클릭했을 때
+      $palyList[1].addEventListener("click", () => {
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+          $palyList[0].disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
