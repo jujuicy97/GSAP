@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>자바스크립트 스크롤처리</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      main {
+        height: 300vh;
+        background-color: #888;
+      }
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        /* width: 100%; */
+        width: 0;
+        height: 20px;
+        background-color: tomato;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="progress"></div>
+    </main>
+    <script>
+      window.addEventListener("scroll", () => {
+        //전체 height 값을 가져올 수 있음(현재 스크롤 위치)
+        // console.log(document.documentElement.scrollHeight);
+        // //100vh 값 가져오기 :client, inner
+        // console.log(document.documentElement.clientHeight);
+
+        //스크롤 현재
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const percent = (scrollTop/docHeight)*100;
+        //
+        const $bar = document.querySelector(".progress");
+        $bar.style.width = `${percent}%`;
+      });
+    </script>
+  </body>
+</html>

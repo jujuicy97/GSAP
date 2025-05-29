@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <title>GSAP 사용하기</title>
+    <style>
+      .title{opacity: 0;}
+      .box{
+        width: 300px; 
+        height: 20px; 
+        background-color: tomato;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title">WELCOME</div>
+    <div class="box"></div>
+    <div class="detail">자세히 보기</div>
+    <script>
+      //gsap 메소드
+      //gsap.to() : 현재 -> 다른 형태로 전환 애니메이션
+      const $title = document.querySelector(".title");
+      // gsap.to(".title",{ 
+      gsap.to($title,{
+        x : 200,
+        opacity : 1,
+        duration : 1,
+        ease : "power2.out"
+      });
+
+      //gsap.from : 특정 초기 상태 -> 현재 상태로 전환
+      gsap.from(".box",{
+        y : 100,
+        opacity : 0,
+        ease : "power2.out"
+      });
+
+      //gsap.fromto : 시작 상태 -> 목표 상태를 지정해야 사용할 수 있음
+      gsap.fromTo(".detail",
+      { x : 100, background:"#f00", scale:1 },
+      { x : 400, background:"#00f", scale:2, ease : "power4.out" }
+    );
+    </script>
+  </body>
+</html>
